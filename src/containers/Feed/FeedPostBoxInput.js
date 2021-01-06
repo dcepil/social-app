@@ -14,11 +14,11 @@ const useStyles = makeStyles({
     fontWeight: "100",
     marginLeft: "10px",
   },
-  feedPostBoxOptions: {
+  optionsDiv: {
     display: "flex",
     marginTop: "10px",
   },
-  feedPostBoxButton: {
+  button: {
     backgroundColor: "rgb(var(--colors-primary))",
     border: "none",
     fontWeight: "600",
@@ -37,10 +37,16 @@ const FeedPostBoxInput = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <InputBase className={classes.input} fullWidth multiline placeholder="Post something!" />
-      <div className={classes.feedPostBoxOptions}>
+      <InputBase
+        className={classes.input}
+        fullWidth
+        multiline
+        placeholder="Post something!"
+        inputProps={{ "aria-label": "post input box" }}
+      />
+      <div className={classes.optionsDiv}>
         <FeedPostBoxOption Icon={ImageOutlinedIcon} />
-        <Button className={classes.feedPostBoxButton} variant="outlined">
+        <Button className={classes.button} variant="outlined">
           Post
         </Button>
       </div>

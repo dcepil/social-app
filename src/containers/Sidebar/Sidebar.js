@@ -12,7 +12,8 @@ const useStyles = makeStyles({
   root: {
     flex: "0.2",
     borderRight: "1px solid rgba(var(--colors-border), 0.3)",
-    padding: "30px",
+    padding: "0 30px",
+    paddingTop: "10px",
     height: "100%",
     "& .active": {
       color: "rgb(var(--colors-primary))",
@@ -39,7 +40,7 @@ const Sidebar = () => {
   return (
     <nav className={classes.root}>
       <NavLink exact to="/">
-        <SidebarOption Icon={HomeIcon} text="Home" />  
+        <SidebarOption Icon={HomeIcon} text="Home" />
       </NavLink>
       <NavLink to="/notifications">
         <SidebarOption Icon={NotificationsIcon} text="Notifications" />
