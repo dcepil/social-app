@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   input: {
     fontSize: "20px",
     fontWeight: "100",
-    marginLeft: "10px",
+    paddingLeft: "10px",
   },
   optionsDiv: {
     display: "flex",
@@ -42,7 +42,7 @@ const FeedPostBoxInput = () => {
         fullWidth
         multiline
         placeholder="Post something!"
-        inputProps={{ "aria-label": "post input box" }}
+        inputProps={{ "aria-label": "post input box", maxLength: 250 }}
       />
       <div className={classes.optionsDiv}>
         <FeedPostBoxOption Icon={ImageOutlinedIcon} />
