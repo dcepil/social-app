@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     color: "rgb(var(--colors-border))",
   },
-  iconDiv: {},
 }));
 
 const Searchbar = () => {
