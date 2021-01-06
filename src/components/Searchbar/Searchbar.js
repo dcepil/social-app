@@ -9,11 +9,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "30px",
     display: "flex",
     alignItems: "center",
-    paddingLeft: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
   },
   input: {
     fontWeight: "100",
-    padding: "10px",
+    padding: "5px",
   },
   icon: {
     color: "rgb(var(--colors-border))",

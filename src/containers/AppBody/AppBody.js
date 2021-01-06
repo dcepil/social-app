@@ -3,19 +3,20 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
   root: {
-    flexGrow: 1,
     display: "flex",
-    height: "100vh",
-    marginLeft: "auto",
-    marginRight: "auto",
-    maxWidth: "1300px",
-    padding: "0 10px",
+    flex: "0.8",
+    overflowY: "scroll",
+    msOverflowStyle: "none",
+    scrollbarWidth: "none",
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
   },
 }));
 
 const AppBody = ({ children }) => {
   const classes = useStyles();
-  return <div className={classes.root}>{children}</div>;
+  return <main className={classes.root}>{children}</main>;
 };
 
 export default AppBody;
