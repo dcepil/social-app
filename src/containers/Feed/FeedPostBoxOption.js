@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
-  feedPostBoxOption: {
+  root: {
     color: "rgb(var(--colors-primary))",
     width: "fit-content",
     display: "flex",
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 const FeedPostBoxOption = ({ Icon }) => {
   const classes = useStyles();
   return (
-    <div className={classes.feedPostBoxOption}>
+    <div className={classes.root}>
       <Icon />
     </div>
   );

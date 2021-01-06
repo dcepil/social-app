@@ -3,16 +3,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Avatar } from "@material-ui/core";
 import { deepOrange } from "@material-ui/core/colors";
 import FeedPostBoxInput from "./FeedPostBoxInput";
-import { Button, InputBase } from "@material-ui/core";
-import SidebarOption from "../Sidebar/SidebarOption";
-import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: "10px 15px",
     borderBottom: "1px solid rgba(var(--colors-border), 0.3)",
   },
-  feedBoxInput: {
+  input: {
     display: "flex",
     color: "rgb(var(--colors-background))",
   },
@@ -34,7 +31,7 @@ const FeedBox = () => {
   return (
     <div className={classes.root}>
       <form>
-        <div className={classes.feedBoxInput}>
+        <div className={classes.input}>
           <div className={classes.avatarDiv}>
             <Avatar
               className={`${classes.orange} ${classes.large} ${classes.avatar}`}
