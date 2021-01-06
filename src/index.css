@@ -1,13 +1,31 @@
-body {
+:root {
+  --colors-background: 18, 21, 51;
+  --colors-primary: 110, 121, 245;
+  --colors-secondary: 70, 75, 128;
+  --colors-border: 136, 153, 166;
+  --colors-comp-primary: 245, 216, 110;
+  --colors-comp-secondary: 168, 141, 42;
+}
+
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+body {
+  background-color: rgb(var(--colors-background)) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
