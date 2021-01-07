@@ -9,9 +9,9 @@ const useStyles = makeStyles({
   },
 });
 
-const FeedDivider = () => {
+const Divider = () => {
   const classes = useStyles();
   return <div className={classes.root}></div>;
 };
 
-export default FeedDivider;
+export default Divider;
