@@ -90,6 +90,9 @@ const useStyles = makeStyles((theme) => ({
       color: "rgb(var(--colors-comment))",
     },
   },
+  headerName: {
+    fontWeight: "800",
+  },
 }));
 
 const Post = ({ name, handle, text, media, avatar }) => {
