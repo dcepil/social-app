@@ -45,9 +45,9 @@ const Sidebar = () => {
       <NavLink to="/notifications">
         <SidebarOption Icon={NotificationsIcon} text="Notifications" />
       </NavLink>
-      <NavLink to="/messages">
+      {/* <NavLink to="/messages">
         <SidebarOption Icon={MessagesIcon} text="Messages" />
-      </NavLink>
+      </NavLink> */}
       <NavLink to="/profile">
         <SidebarOption Icon={ProfileIcon} text="Profile" />
       </NavLink>

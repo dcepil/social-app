@@ -5,6 +5,9 @@
   --colors-border: 136, 153, 166;
   --colors-comp-primary: 245, 216, 110;
   --colors-comp-secondary: 168, 141, 42;
+  --colors-comment: 51, 153, 255;
+  --colors-repost: 0, 204, 0;
+  --colors-like: 255, 80, 80;
 }
 
 * {

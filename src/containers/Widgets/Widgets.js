@@ -8,6 +8,9 @@ const useStyles = makeStyles({
     borderLeft: "1px solid rgba(var(--colors-border), 0.3)",
     padding: "0 30px",
     paddingTop: "10px",
+    height: "100%",
+    position: "sticky",
+    top: "0",
   },
 });
 
