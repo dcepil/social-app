@@ -7,7 +7,7 @@ import Sidebar from "./containers/Sidebar";
 import Feed from "./containers/Feed";
 import Widgets from "./containers/Widgets";
 import Notifications from "./containers/Notifications";
-import Messages from "./containers/Messages";
+// import Messages from "./containers/Messages";
 import Profile from "./containers/Profile";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -41,7 +41,7 @@ function App() {
             <Switch>
               <Route path="/" exact component={Feed} />
               <Route path="/notifications" component={Notifications} />
-              <Route path="/messages" component={Messages} />
+              {/* <Route path="/messages" component={Messages} /> */}
               <Route path="/profile" component={Profile} />
             </Switch>
             <Widgets />

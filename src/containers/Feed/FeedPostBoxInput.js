@@ -1,8 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, InputBase } from "@material-ui/core";
-import FeedPostBoxOption from "./FeedPostBoxOption";
-import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
+import { Button, IconButton, InputBase } from "@material-ui/core";
+import ImageIcon from "@material-ui/icons/ImageOutlined";
 
 const useStyles = makeStyles({
   root: {
@@ -31,6 +30,21 @@ const useStyles = makeStyles({
       backgroundColor: "rgba(var(--colors-primary), 0.7)",
     },
   },
+  fileInput: {
+    display: "none",
+  },
+  iconButton: {
+    color: "rgb(var(--colors-primary))",
+    padding: "8px",
+    transition: "background-color 200ms ease-out",
+    borderRadius: "30px",
+    "&:hover": {
+      backgroundColor: "rgba(var(--colors-primary), 0.2)",
+    },
+    "& .MuiSvgIcon-root": {
+      fontSize: "22px",
+    },
+  },
 });
 
 const FeedPostBoxInput = () => {
@@ -45,7 +59,21 @@ const FeedPostBoxInput = () => {
         inputProps={{ "aria-label": "post input box", maxLength: 250 }}
       />
       <div className={classes.optionsDiv}>
-        <FeedPostBoxOption Icon={ImageOutlinedIcon} />
+        <input
+          accept="image/*"
+          className={classes.fileInput}
+          id="icon-button-file"
+          type="file"
+        />
+        <label htmlFor="icon-button-file">
+          <IconButton
+            className={classes.iconButton}
+            aria-label="upload picture"
+            component="span"
+          >
+            <ImageIcon />
+          </IconButton>
+        </label>
         <Button className={classes.button} variant="outlined">
           Post
         </Button>
