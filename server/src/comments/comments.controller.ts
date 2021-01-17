@@ -1,30 +1,38 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import { CheckPostExists } from '../core/guards/post-exists.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CheckUserIsAuthor } from '../core/guards/user-is-author.guard';
 import { CommentsService } from './comments.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import { CommentDto } from './dto/comment.dto';
 
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
+  @UseGuards(JwtAuthGuard, CheckUserIsAuthor, CheckPostExists)
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
+  async create(@Body() commentData: CommentDto) {
+    return await this.commentsService.create(commentData);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.commentsService.findAll();
+  async findAllByPostId(@Request() req: Request) {
+    return await this.commentsService.findAllByPostId(req);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.commentsService.findOne(+id);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.update(+id, updateCommentDto);
   }
 
   @Delete(':id')

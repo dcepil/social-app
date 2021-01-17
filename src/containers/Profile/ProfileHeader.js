@@ -43,9 +43,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   link: {
-    transition: "color 200ms, background-color 200ms ease-out",
+    transition: "color 200ms ease-out",
     "&:hover": {
-      backgroundColor: "rgba(var(--colors-primary), 0.2)",
       color: "rgb(var(--colors-primary))",
     },
   },

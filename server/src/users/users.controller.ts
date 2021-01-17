@@ -1,34 +1,52 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Put,
+  Param,
+  Delete,
+  UseGuards,
+  NotFoundException,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserDto } from './dto/user.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
-
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    const users = await this.usersService.findAll();
+    if (!users) throw new NotFoundException('No users.');
+    const pwdlessUsers = [];
+    users.forEach((user) => {
+      const { password, ...result } = user['_doc'];
+      pwdlessUsers.push(result);
+    });
+    return pwdlessUsers;
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @UseGuards(JwtAuthGuard)
+  @Get(':handle')
+  async findOne(@Param('handle') handle: string) {
+    const user = await this.usersService.findOne(handle);
+    if (!user) throw new NotFoundException("User doesn't exist.");
+    const { password, ...result } = user['_doc'];
+    return result;
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @UseGuards(JwtAuthGuard)
+  @Put(':handle')
+  async update(@Param('handle') handle: string, @Body() userData: UserDto) {
+    return await this.usersService.update(handle, userData);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  @Delete(':handle')
+  async remove(@Param('handle') handle: string) {
+    return await this.usersService.remove(handle);
   }
 }
