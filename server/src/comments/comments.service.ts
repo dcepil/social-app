@@ -1,23 +1,40 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { PostsService } from '../posts/posts.service';
+import { CommentDto } from './dto/comment.dto';
+import { Comment, CommentDocument } from './schemas/comment.schema';
 
 @Injectable()
 export class CommentsService {
-  create(createCommentDto: CreateCommentDto) {
-    return 'This action adds a new comment';
+  constructor(
+    @InjectModel(Comment.name)
+    private readonly commentModel: Model<CommentDocument>,
+  ) {}
+
+  async create(commentData: CommentDto): Promise<Comment> {
+    try {
+      const createComment = new this.commentModel(commentData);
+      return await createComment.save();
+    } catch (error) {
+      console.error(error);
+      throw new HttpException('Bad comment data', HttpStatus.BAD_REQUEST);
+    }
   }
 
-  findAll() {
-    return `This action returns all comments`;
+  async findAllByPostId(request): Promise<Comment[]> {
+    try {
+      return await this.commentModel.find({ parent: request.body.postId }).exec();
+    } catch {
+      throw new HttpException(
+        'Post does not exist or does not have comments',
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   findOne(id: number) {
     return `This action returns a #${id} comment`;
-  }
-
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
   }
 
   remove(id: number) {
