@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostDto } from './dto/post.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CheckUserIsAuthor } from '../core/guards/user-is-author.guard';
 
 @Controller('posts')

@@ -9,8 +9,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UserDto } from './dto/user.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CreateUserDto } from './dto/create-user.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -32,15 +32,17 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get(':handle')
   async findOne(@Param('handle') handle: string) {
-    const user = await this.usersService.findOne(handle);
-    if (!user) throw new NotFoundException("User doesn't exist.");
+    const user = await this.usersService.findOneByHandle(handle);
     const { password, ...result } = user['_doc'];
     return result;
   }
 
   @UseGuards(JwtAuthGuard)
   @Put(':handle')
-  async update(@Param('handle') handle: string, @Body() userData: UserDto) {
+  async update(
+    @Param('handle') handle: string,
+    @Body() userData: CreateUserDto,
+  ) {
     return await this.usersService.update(handle, userData);
   }
 
