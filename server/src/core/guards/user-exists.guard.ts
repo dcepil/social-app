@@ -19,10 +19,10 @@ export class CheckUserExists implements CanActivate {
   }
 
   async validateRequest(request) {
-    const userExistsByHandle = await this.userService.findOne(
+    const userExistsByHandle = await this.userService.findOneByHandle(
       request.body.handle,
     );
-    const userExistsByEmail = await this.userService.findOne(request.body.email);
+    const userExistsByEmail = await this.userService.findOneByHandle(request.body.email);
     if (userExistsByHandle || userExistsByEmail) {
       throw new ForbiddenException(
         'A user with this handle/email already exists.',

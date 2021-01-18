@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsNumber,
+  MaxLength,
+} from 'class-validator';
 import { User } from '../../users/schemas/user.schema';
 import { Post } from '../../posts/schemas/post.schema';
 
@@ -11,9 +17,14 @@ export class CommentDto {
 
   @IsString()
   @IsNotEmpty()
+  @MaxLength(250)
   readonly body: string;
 
+  @IsString()
+  @IsOptional()
   readonly media: string;
+
+  @IsNumber()
+  @IsOptional()
   readonly likes: number;
-  readonly replies: Record<string, any>;
 }

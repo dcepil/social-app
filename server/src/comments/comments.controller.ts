@@ -9,7 +9,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { CheckPostExists } from '../core/guards/post-exists.guard';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CheckUserIsAuthor } from '../core/guards/user-is-author.guard';
 import { CommentsService } from './comments.service';
 import { CommentDto } from './dto/comment.dto';

@@ -2,21 +2,28 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { User } from '../users/schemas/user.schema';
+import { TokenPayload } from './interfaces/token-payload.interface';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
-  async validateUser(handle: string, plainPassword: string): Promise<any> {
-    const user = await this.usersService.findOne(handle);
-    if (!user) return null;
-    const match = await this.validatePassword(plainPassword, user.password);
-    if (!match) return null;
-    const { password, ...result } = user['_doc'];
-    return result;
+  async validateUser(handle: string, plainPassword: string): Promise<User> {
+    try {
+      const user = await this.usersService.findOneByHandle(handle);
+      await this.validatePassword(plainPassword, user.password);
+      const { password, ...result } = user['_doc'];
+      return result;
+    } catch {
+      throw new HttpException('Wrong credentials', HttpStatus.BAD_REQUEST);
+    }
   }
 
   async validatePassword(
@@ -24,24 +31,50 @@ export class AuthService {
     hashedPassword: string,
   ): Promise<boolean> {
     const match = await bcrypt.compare(plainPassword, hashedPassword);
+    if (!match)
+      throw new HttpException('Wrong credentials', HttpStatus.BAD_REQUEST);
     return match;
   }
 
-  async login(user: any): Promise<any> {
-    const token = await this.generateToken(user);
-    return { user, token };
+  async login(handle: string): Promise<string> {
+    const payload: TokenPayload = { userHandle: handle };
+    const token = await this.jwtService.signAsync(payload);
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+      'JWT_EXPIRATION_TIME',
+    )}`;
   }
 
-  async generateToken(user: any): Promise<string> {
+  async refreshToken(
+    handle: string,
+  ): Promise<{ cookie: string; token: string }> {
+    const payload: TokenPayload = { userHandle: handle };
+    const token = await this.jwtService.signAsync(payload, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+      expiresIn: `${this.configService.get('JWT_REFRESH_EXPIRATION_TIME')}s`,
+    });
+    const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+      'JWT_REFRESH_EXPIRATION_TIME',
+    )}`;
+    return { cookie, token };
+  }
+
+  async logout(): Promise<string[]> {
+    return [
+      'Authentication=; HttpOnly; Path=/; Max-Age=0',
+      'Refresh=; HttpOnly; Path=/; Max-Age=0',
+    ];
+  }
+
+  async generateToken(user: User): Promise<string> {
     const token = await this.jwtService.signAsync(user);
     return token;
   }
 
-  async create(user: any): Promise<any> {
+  async signUp(signupData: CreateUserDto): Promise<any> {
     try {
-      const hashedPassword = await this.hashPassword(user.password);
+      const hashedPassword = await this.hashPassword(signupData.password);
       const createUser = await this.usersService.create({
-        ...user,
+        ...signupData,
         password: hashedPassword,
       });
       const { password, ...result } = createUser['_doc'];
