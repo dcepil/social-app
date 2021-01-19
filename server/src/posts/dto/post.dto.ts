@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsNumber,
   IsBoolean,
+  IsDate
 } from 'class-validator';
 import { User } from '../../users/schemas/user.schema';
 
@@ -27,7 +28,7 @@ export class PostDto {
   @IsOptional()
   readonly isRepost: boolean;
 
-  @IsNumber()
+  @IsDate()
   @IsOptional()
-  readonly postTimeout: number;
+  readonly postTimeout: Date;
 }

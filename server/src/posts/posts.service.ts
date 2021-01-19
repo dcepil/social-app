@@ -11,12 +11,14 @@ export class PostsService {
   ) {}
 
   async create(postData: PostDto, user: any): Promise<Post> {
+    const postTimeout = new Date();
+    postTimeout.setHours(postTimeout.getHours() + user.postTimeout);
     try {
-      const createPost = new this.postModel({
+      const newPost = new this.postModel({
+        postTimeout: postTimeout,
         ...postData,
-        postTimeout: user.postTimeout,
       });
-      return await createPost.save();
+      return await newPost.save();
     } catch {
       throw new HttpException('Bad post data', HttpStatus.BAD_REQUEST);
     }

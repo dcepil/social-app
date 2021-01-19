@@ -16,7 +16,7 @@ export class CheckUserIsAuthor implements CanActivate {
   }
 
   async validateRequest(request) {
-    if (request.body.author !== request.user._id) {
+    if (request.body.author !== request.user._id.toString()) {
       throw new UnauthorizedException('Unauthorized post/comment add request');
     }
     return true;

@@ -1,6 +1,6 @@
-import { NestFactory, Reflector } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import * as rateLimit from 'express-rate-limit';
 import * as helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
@@ -20,7 +20,6 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({ skipMissingProperties: true, transform: true }),
   );
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.setGlobalPrefix('api/v1');
   await app.listen(3000);
 }
