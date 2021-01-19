@@ -1,24 +1,21 @@
 import {
   Controller,
-  Request,
   Post,
   UseGuards,
   Get,
   Body,
   HttpCode,
-  UseInterceptors,
-  ClassSerializerInterceptor,
-  Res,
   Req,
+  Request,
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RequestWithUser } from './interfaces/request-user.interface';
-import { Response } from 'express';
 import { UsersService } from '../users/users.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
+import { User } from '../users/schemas/user.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -27,32 +24,39 @@ export class AuthController {
     private readonly usersService: UsersService,
   ) {}
 
+  @Get('csrf')
+  async getCSRFToken(@Request() req): Promise<string> {
+    return req.csrfToken();
+  }
+
   @Post('signup')
-  async signUp(@Body() userData: CreateUserDto) {
+  async signUp(@Body() userData: CreateUserDto): Promise<any> {
     return await this.authService.signUp(userData);
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(200)
-  async login(@Req() request: RequestWithUser) {
+  async login(@Req() request: RequestWithUser): Promise<User> {
     const { user } = request;
     const accessCookie = await this.authService.login(user.handle);
     const {
       cookie: refreshCookie,
-      token: refreshToken,
+      token: newRefreshToken,
     } = await this.authService.refreshToken(user.handle);
-    await this.usersService.setRefreshToken(refreshToken, user.handle);
+    await this.usersService.setRefreshToken(newRefreshToken, user.handle);
     request.res.setHeader('Set-Cookie', [accessCookie, refreshCookie]);
-    return user;
+    const { refreshToken, ...result } = user;
+    return result;
   }
 
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
-  async refresh(@Req() request: RequestWithUser) {
+  async refresh(@Req() request: RequestWithUser): Promise<User> {
     const accessCookie = await this.authService.login(request.user.handle);
     request.res.setHeader('Set-Cookie', accessCookie);
-    return request.user;
+    const { password, refreshToken, ...result } = request.user['_doc'];
+    return result;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -65,7 +69,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() request: RequestWithUser) {
-    const { password, ...result } = request.user['_doc'];
+    const { password, refreshToken, ...result } = request.user['_doc'];
     return result;
   }
 }
