@@ -17,7 +17,9 @@ async function bootstrap() {
       max: 1000,
     }),
   );
-  app.useGlobalPipes(new ValidationPipe({ skipMissingProperties: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({ skipMissingProperties: true, transform: true }),
+  );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.setGlobalPrefix('api/v1');
   await app.listen(3000);

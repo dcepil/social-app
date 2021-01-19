@@ -11,6 +11,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { User } from './schemas/user.schema';
 
 @Controller('users')
 export class UsersController {
@@ -23,7 +24,7 @@ export class UsersController {
     if (!users) throw new NotFoundException('No users.');
     const pwdlessUsers = [];
     users.forEach((user) => {
-      const { password, ...result } = user['_doc'];
+      const { password, refreshTOken, ...result } = user['_doc'];
       pwdlessUsers.push(result);
     });
     return pwdlessUsers;
@@ -31,9 +32,9 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':handle')
-  async findOne(@Param('handle') handle: string) {
+  async findOne(@Param('handle') handle: string): Promise<User> {
     const user = await this.usersService.findOneByHandle(handle);
-    const { password, ...result } = user['_doc'];
+    const { password, refreshToken, ...result } = user['_doc'];
     return result;
   }
 
