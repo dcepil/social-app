@@ -22,8 +22,8 @@ export class Post {
   @Prop({ default: false })
   isRepost: boolean;
 
-  @Prop({ required: true, default: 24, min: 8, max: 72 })
-  postTimeout: number;
+  @Prop({ type: Date, required: true, default: Date.now, expires: 1 })
+  postTimeout: Date;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
