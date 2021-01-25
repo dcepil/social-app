@@ -1,6 +1,6 @@
-import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Searchbar from "../../components/Searchbar";
+import { useApi } from "../../hooks/useApi";
 
 const useStyles = makeStyles({
   root: {
@@ -16,10 +16,13 @@ const useStyles = makeStyles({
 
 const Widgets = () => {
   const classes = useStyles();
-  return (
+  const { state } = useApi();
+  return state.user ? (
     <aside className={classes.root}>
       <Searchbar />
     </aside>
+  ) : (
+    <aside className={classes.root}></aside>
   );
 };
 

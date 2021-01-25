@@ -15,6 +15,10 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
+  async getCSRFToken(request: any): Promise<string> {
+    return JSON.stringify({ csrfToken: request.csrfToken() });
+  }
+
   async validateUser(handle: string, plainPassword: string): Promise<User> {
     try {
       const user = await this.usersService.findOneByHandle(handle);
@@ -39,7 +43,7 @@ export class AuthService {
   async login(handle: string): Promise<string> {
     const payload: TokenPayload = { userHandle: handle };
     const token = await this.jwtService.signAsync(payload);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+    return `Authentication=${token}; HttpOnly; Path=/; SameSite=Strict; Max-Age=${this.configService.get(
       'JWT_EXPIRATION_TIME',
     )}`;
   }
@@ -52,7 +56,7 @@ export class AuthService {
       secret: this.configService.get('JWT_REFRESH_SECRET'),
       expiresIn: `${this.configService.get('JWT_REFRESH_EXPIRATION_TIME')}s`,
     });
-    const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+    const cookie = `Refresh=${token}; HttpOnly; Path=/; SameSite=Strict; Max-Age=${this.configService.get(
       'JWT_REFRESH_EXPIRATION_TIME',
     )}`;
     return { cookie, token };
@@ -60,8 +64,8 @@ export class AuthService {
 
   async logout(): Promise<string[]> {
     return [
-      'Authentication=; HttpOnly; Path=/; Max-Age=0',
-      'Refresh=; HttpOnly; Path=/; Max-Age=0',
+      'Authentication=; HttpOnly; Path=/; SameSite=Strict; Max-Age=0',
+      'Refresh=; HttpOnly; Path=/; SameSite=Strict; Max-Age=0',
     ];
   }
 
@@ -78,8 +82,8 @@ export class AuthService {
         password: hashedPassword,
       });
       const { password, ...result } = createUser['_doc'];
-      const token = await this.generateToken(result);
-      return { user: result, token };
+      await this.generateToken(result);
+      return result;
     } catch {
       throw new HttpException('Bad user data', HttpStatus.BAD_REQUEST);
     }

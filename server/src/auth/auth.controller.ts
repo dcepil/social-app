@@ -9,6 +9,7 @@ import {
   Request,
   UseInterceptors,
   ClassSerializerInterceptor,
+  Response,
 } from '@nestjs/common';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
@@ -18,6 +19,7 @@ import { RequestWithUser } from './interfaces/request-user.interface';
 import { UsersService } from '../users/users.service';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { User } from '../users/schemas/user.schema';
+import { request, Response as ExpressResponse } from 'express';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,8 +30,8 @@ export class AuthController {
   ) {}
 
   @Get('csrf')
-  async getCSRFToken(@Request() req): Promise<string> {
-    return req.csrfToken();
+  async getCSRFToken(@Request() request): Promise<string> {
+    return await this.authService.getCSRFToken(request);
   }
 
   @Post('signup')
@@ -64,6 +66,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('logout')
+  @HttpCode(200)
   async logout(@Req() request: RequestWithUser) {
     await this.usersService.removeRefreshToken(request.user.handle);
     request.res.setHeader('Set-Cookie', await this.authService.logout());
