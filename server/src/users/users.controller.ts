@@ -27,7 +27,7 @@ export class UsersController {
     if (!users) throw new NotFoundException('No users.');
     const pwdlessUsers = [];
     users.forEach((user) => {
-      const { password, refreshTOken, ...result } = user['_doc'];
+      const { password, refreshToken, email, ...result } = user['_doc'];
       pwdlessUsers.push(result);
     });
     return pwdlessUsers;
